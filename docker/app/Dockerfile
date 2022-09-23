@@ -19,8 +19,8 @@ RUN chown -R www-data:www-data $COMPOSER_HOME
 WORKDIR /tmp
 RUN /usr/local/bin/install_composer.sh
 
-RUN docker-php-ext-install pdo pdo_mysql opcache zip
-RUN docker-php-ext-enable opcache pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql opcache zip curl
+RUN docker-php-ext-enable opcache pdo_mysql curl
 
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 
