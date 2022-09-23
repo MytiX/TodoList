@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:7.4-apache
 
 ENV COMPOSER_HOME=/usr/local/lib/composer
 
@@ -13,11 +13,11 @@ RUN apt update && \
     wget \
     zip
 
-COPY install_composer.sh /usr/local/bin/
+# On copy l'executable composer depuis l'image officiel depuis la version 2.2.17
+# Attention en version 2.4 les scripts post install ne fonctionne pas
+COPY --from=composer/composer:2.2.17 /usr/bin/composer /usr/local/bin/composer
 RUN mkdir -p $COMPOSER_HOME
 RUN chown -R www-data:www-data $COMPOSER_HOME
-WORKDIR /tmp
-RUN /usr/local/bin/install_composer.sh
 
 RUN docker-php-ext-install pdo pdo_mysql opcache zip curl
 RUN docker-php-ext-enable opcache pdo_mysql curl
