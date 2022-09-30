@@ -35,7 +35,7 @@ class SecurityControllerTest extends WebTestCase
 
         $form->setValues([
             '_username' => 'Test',
-            '_password' => 'test',
+            '_password' => 'testtest',
         ]);
 
         $this->client->submit($form);

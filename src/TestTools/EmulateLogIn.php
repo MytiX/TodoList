@@ -18,7 +18,7 @@ class EmulateLogIn
 
         // you may need to use a different token class depending on your application.
         // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
-        $token = new UsernamePasswordToken('Test', 'test', $firewallName, []);
+        $token = new UsernamePasswordToken('Test', 'testtest', $firewallName, []);
         $session->set('_security_'.$firewallContext, serialize($token));
         $session->save();
 
