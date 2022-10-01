@@ -35,10 +35,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertContains("Il n'y a pas encore de tâche enregistrée.", $crawler->filter('div .alert-warning')->text());
     }
 
-    /**
-     * @depends testListAction
-     */
-    public function testCreateAction()
+    public function testTaskCreateAction()
     {
         $url = $this->urlGenerator->generate('task_create');
 
@@ -65,10 +62,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertContains('<strong>Superbe !</strong> La tâche a été bien été ajoutée.', $response->getContent());
     }
 
-    /**
-     * @depends testCreateAction
-     */
-    public function testEditAction()
+    public function testTaskEditAction()
     {
         $url = $this->urlGenerator->generate('task_list');
 
@@ -105,10 +99,7 @@ class TaskControllerTest extends WebTestCase
 
     }
 
-    /**
-     * @depends testEditAction
-     */
-    public function testToggleTaskAction()
+    public function testTaskToggleTaskAction()
     {
         $url = $this->urlGenerator->generate('task_list');
 
@@ -128,10 +119,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertContains('Marquer non terminée', $crawler->selectButton('Marquer non terminée')->text());
     }
 
-    /**
-     * @depends testToggleTaskAction
-     */
-    public function testDeleteTaskAction()
+    public function testTaskDeleteTaskAction()
     {
         $url = $this->urlGenerator->generate('task_list');
 

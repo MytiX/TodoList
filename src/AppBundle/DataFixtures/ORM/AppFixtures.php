@@ -23,12 +23,6 @@ class AppFixtures extends Fixture
         $user->setUsername('Test');
         $user->setPassword($passwordEncoder->encodePassword($user, 'testtest'));
 
-        $task = new Task();
-
-        $task->setTitle('Développez les tests fonctionnels');
-        $task->setContent('Je suis la description des tests fonctionnels');
-
-        $manager->persist($task);
         $manager->persist($user);
         $manager->flush();
     }
