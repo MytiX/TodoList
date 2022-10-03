@@ -2,15 +2,12 @@
 
 namespace Tests\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use TestTools\EmulateLogIn;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\HttpFoundation\Request;
+use Tests\AbstractWebTestCase\AbstractWebTestCase;
 
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTest extends AbstractWebTestCase
 {
     /** @var Client */
     private $client = null;
@@ -26,7 +23,7 @@ class DefaultControllerTest extends WebTestCase
 
     public function testIndexAction()
     {
-        EmulateLogIn::logUserTest($this->client);
+        $this->logUser($this->client, 'Test', 'testtest');
 
         $url = $this->urlGenerator->generate('homepage');
 

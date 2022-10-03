@@ -2,14 +2,13 @@
 
 namespace Tests\AppBundle\Controller;
 
-use TestTools\EmulateLogIn;
 use Symfony\Component\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\AbstractWebTestCase\AbstractWebTestCase;
 
-class UserControllerTest extends WebTestCase
+class UserControllerTest extends AbstractWebTestCase
 {
     /** @var Client */
     private $client;
@@ -21,7 +20,7 @@ class UserControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->urlGenerator = $this->client->getContainer()->get('router');
-        EmulateLogIn::logUserTest($this->client);
+        $this->logUser($this->client, 'Test', 'testtest');
     }
 
     public function testUserListAction()

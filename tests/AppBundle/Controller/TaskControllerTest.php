@@ -2,15 +2,14 @@
 
 namespace Tests\AppBundle\Controller;
 
-use TestTools\EmulateLogIn;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\AbstractWebTestCase\AbstractWebTestCase;
 
-class TaskControllerTest extends WebTestCase
+class TaskControllerTest extends AbstractWebTestCase
 {
     /** @var Client */
     private $client;
@@ -22,7 +21,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->urlGenerator = $this->client->getContainer()->get('router');
-        EmulateLogIn::logUserTest($this->client);
+        $this->logUser($this->client, 'Test', 'testtest');
     }
 
     public function testTaskListAction()
