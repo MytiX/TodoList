@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+    www:
+        build: docker/app
+        container_name: www_todolist_5.4
+        ports:
+            - 8000:80
+        restart: always
+        volumes: 
+            - ./:/var/www
+        networks:
+            - dev
+    db:
+        build: docker/database
+        container_name: db_todolist_5.4
+        ports:
+            - 3306:3306
+        restart: always
+        volumes: 
+            - db-data:/var/lib/mysql
+        networks:
+            - dev
+    phpmyadmin:
+        build: docker/phpmyadmin
+        container_name: phpmyadmin_todolist_5.4
+        restart: always
+        depends_on:
+            - db
+        ports: 
+            - 8080:80
+        networks:
+            - dev
+        environment: 
+            PMA_HOST: db
+    maildev:
+        build: docker/maildev
+        container_name: maildev_todolist_5.4
+        command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+        ports: 
+            - 8081:80
+        restart: always
+        networks: 
+            - dev
+
+networks:
+    dev:
+
+volumes: 
+    db-data:
