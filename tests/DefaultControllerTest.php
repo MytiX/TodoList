@@ -19,8 +19,7 @@ class DefaultControllerTest extends AbstractWebTestCase
 
         $url = $urlGenerator->generate('homepage');
 
-        /** @var Crawler $crawler */
-        $crawler = $client->request(Request::METHOD_GET, $url);
+        $client->request(Request::METHOD_GET, $url);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('#main h1', 'Bienvenue sur Todo List');
