@@ -25,7 +25,7 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
+        <nav id="header" class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{{ path('homepage') }}">To Do List app</a>
@@ -36,7 +36,7 @@
         </nav>
 
         <!-- Page Content -->
-        <div class="container">
+        <div id="main" class="container">
             <div class="row">
                 <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
 
@@ -78,7 +78,7 @@
         </div>
         <!-- /.container -->
 
-        <div class="container">
+        <div id="footer" class="container">
 
             <hr>
             <footer>
