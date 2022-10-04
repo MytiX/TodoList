@@ -1,6 +1,8 @@
-FROM php:5.6-apache
+FROM php:8.0.24-apache
 
 ENV COMPOSER_HOME=/usr/local/lib/composer
+
+RUN echo 'deb [trusted=yes] https://repo.symfony.com/apt/ /' | tee /etc/apt/sources.list.d/symfony-cli.list
 
 RUN apt update && \
     apt install -y \
@@ -11,17 +13,18 @@ RUN apt update && \
     libzip-dev \
     unzip \
     wget \
-    zip
+    zip \
+    symfony-cli
 
-COPY install_composer.sh /usr/local/bin/
+# On copy l'executable composer depuis l'image officiel depuis la version 2.2.17
+# Attention en version 2.4 les scripts post install ne fonctionne pas
+COPY --from=composer/composer:2.2.17 /usr/bin/composer /usr/local/bin/composer
 RUN mkdir -p $COMPOSER_HOME
 RUN chown -R www-data:www-data $COMPOSER_HOME
-WORKDIR /tmp
-RUN /usr/local/bin/install_composer.sh
 
-RUN pecl install xdebug-2.5.5
-RUN docker-php-ext-install pdo pdo_mysql opcache zip
-RUN docker-php-ext-enable opcache pdo_mysql xdebug
+RUN pecl install xdebug
+RUN docker-php-ext-install pdo pdo_mysql opcache zip curl
+RUN docker-php-ext-enable opcache pdo_mysql curl xdebug
 
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 
