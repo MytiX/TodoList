@@ -1,23 +1,24 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace App\Tests\devryx\www\TodoList\tests;
 
 use Symfony\Component\Routing\Router;
 use Symfony\Component\DomCrawler\Form;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityControllerTest extends WebTestCase
 {
-    /** @var Client */
+    /** @var KernelBrowser */
     private $client;
 
     /** @var Router */
     private $urlGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = static::createClient();
         $this->urlGenerator = $this->client->getContainer()->get('router');
@@ -43,8 +44,8 @@ class SecurityControllerTest extends WebTestCase
 
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('Bienvenue sur Todo List', $response->getContent());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSelectorTextContains('#main h1', "Bienvenue sur Todo List");
     }
 
     public function testLoginActionError()
@@ -67,19 +68,19 @@ class SecurityControllerTest extends WebTestCase
 
         $response = $this->client->getResponse();
 
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertContains('Invalid credentials.', $response->getContent());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSelectorTextContains('#main .alert-danger', "Invalid credentials.");
     }
 
     public function testLogoutCheck()
     {
         $url = $this->urlGenerator->generate('logout');
 
-        $this->client->followRedirects();
         /** @var Crawler $crawler */
         $this->client->request(Request::METHOD_GET, $url);
-        
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Nom d\'utilisateur', $this->client->getResponse()->getContent());
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('#main form', "Nom d'utilisateur");
     }
 }

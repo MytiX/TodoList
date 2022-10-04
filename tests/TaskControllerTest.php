@@ -1,37 +1,37 @@
 <?php
+namespace App\Tests\devryx\www\TodoList\tests;
 
-namespace Tests\AppBundle\Controller;
-
-use Symfony\Component\Routing\Router;
 use Symfony\Component\DomCrawler\Form;
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\AbstractWebTestCase\AbstractWebTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use App\Tests\AbstractWebTestCase\AbstractWebTestCase;
 
 class TaskControllerTest extends AbstractWebTestCase
 {
-    /** @var Client */
+    /** @var KernelBrowser */
     private $client;
 
     /** @var Router */
     private $urlGenerator;
-
-    public function setUp()
+        
+    public function setUp(): void
     {
         $this->client = static::createClient();
         $this->urlGenerator = $this->client->getContainer()->get('router');
-        $this->logUser($this->client, 'Test', 'testtest');
+        $this->logUser($this->client, 'Test');
     }
 
     public function testTaskListAction()
     {
+        $this->logUser($this->client, 'Test');
+
         $url = $this->urlGenerator->generate('task_list');
 
-        $crawler = $this->client->request(Request::METHOD_GET, $url);
+        $this->client->request(Request::METHOD_GET, $url);
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains("Il n'y a pas encore de tâche enregistrée.", $crawler->filter('div .alert-warning')->text());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('#main .alert-warning', "Il n'y a pas encore de tâche enregistrée.");
     }
 
     public function testTaskCreateAction()
@@ -40,9 +40,9 @@ class TaskControllerTest extends AbstractWebTestCase
 
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Title', $crawler->filter('form')->text());
-        $this->assertContains('Content', $crawler->filter('form')->text());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('#main form', "Title");
+        $this->assertSelectorTextContains('#main form', "Content");
 
         /** @var Form $form */
         $form = $crawler->selectButton('Ajouter')->form();
@@ -57,8 +57,8 @@ class TaskControllerTest extends AbstractWebTestCase
 
         $response = $this->client->getResponse();
 
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertContains('<strong>Superbe !</strong> La tâche a été bien été ajoutée.', $response->getContent());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSelectorTextContains('#main .alert-success', "Superbe ! La tâche a été bien été ajoutée.");
     }
 
     public function testTaskEditAction()
@@ -77,9 +77,10 @@ class TaskControllerTest extends AbstractWebTestCase
 
         $crawler->addHtmlContent($response->getContent());
 
-        $this->assertContains('Title', $crawler->filter('form')->text());
-        $this->assertContains('Content', $crawler->filter('form')->text());
-        $this->assertContains('Modifier', $crawler->filter('form')->text());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSelectorTextContains('#main form', "Title");
+        $this->assertSelectorTextContains('#main form', "Content");
+        $this->assertSelectorTextContains('#main form', "Modifier");
 
         $form = $crawler->selectButton('Modifier')->form();
 
@@ -93,8 +94,8 @@ class TaskControllerTest extends AbstractWebTestCase
 
         $response = $this->client->getResponse();
 
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertContains('<strong>Superbe !</strong> La tâche a bien été modifiée.', $response->getContent());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSelectorTextContains('#main .alert-success', "Superbe ! La tâche a bien été modifiée.");
 
     }
 
@@ -111,11 +112,8 @@ class TaskControllerTest extends AbstractWebTestCase
 
         $response = $this->client->getResponse();
 
-        $crawler->clear();
-        $crawler->addHtmlContent($response->getContent());
-
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertContains('Marquer non terminée', $crawler->selectButton('Marquer non terminée')->text());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSelectorTextContains('#main form button', "Marquer non terminée");
     }
 
     public function testTaskDeleteTaskAction()
@@ -131,10 +129,7 @@ class TaskControllerTest extends AbstractWebTestCase
 
         $response = $this->client->getResponse();
 
-        $crawler->clear();
-        $crawler->addHtmlContent($response->getContent());
-
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertContains('Superbe ! La tâche a bien été supprimée.', $crawler->filter('.alert-success')->text());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSelectorTextContains('#main .alert-success', "Superbe ! La tâche a bien été supprimée.");
     }
 }
