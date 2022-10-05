@@ -28,6 +28,9 @@ class Task
     #[ORM\Column(type: 'boolean')]
     private $isDone;
 
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
@@ -47,6 +50,8 @@ class Task
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getTitle()
@@ -57,6 +62,8 @@ class Task
     public function setTitle($title)
     {
         $this->title = $title;
+
+        return $this;
     }
 
     public function getContent()
@@ -67,6 +74,8 @@ class Task
     public function setContent($content)
     {
         $this->content = $content;
+
+        return $this;
     }
 
     public function isDone()
@@ -77,5 +86,17 @@ class Task
     public function toggle($flag)
     {
         $this->isDone = $flag;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

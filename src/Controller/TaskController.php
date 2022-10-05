@@ -3,13 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 
 class TaskController extends AbstractController
 {
@@ -18,7 +19,18 @@ class TaskController extends AbstractController
     #[Route(path: '/tasks', name: 'task_list')]
     public function listAction(): Response
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findAll()]);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($this->isGranted('ROLE_ADMIN', $user)) {
+            $tasks = $this->taskRepository->findAllAnonymousAndTheseTask($user->getId());
+        } else {
+            $tasks = $this->taskRepository->findBy([
+                'user' => $user->getId()
+            ]);
+        }
+
+        return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
     #[Route(path: '/tasks/create', name: 'task_create')]
@@ -30,6 +42,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $task->setUser($this->getUser());
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
@@ -49,6 +62,8 @@ class TaskController extends AbstractController
         if (null === $task) {
             return $this->redirectToRoute('task_list');
         }
+
+        $this->denyAccessUnlessGranted('EDIT', $task);
 
         $form = $this->createForm(TaskType::class, $task);
 
@@ -77,6 +92,8 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('task_list');
         }
 
+        $this->denyAccessUnlessGranted('TOGGLE', $task);
+
         $task->toggle(!$task->isDone());
         $this->entityManager->flush();
 
@@ -93,6 +110,8 @@ class TaskController extends AbstractController
         if (null === $task) {
             return $this->redirectToRoute('task_list');
         }
+
+        $this->denyAccessUnlessGranted('DELETE', $task);
 
         $this->entityManager->remove($task);
         $this->entityManager->flush();
