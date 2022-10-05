@@ -23,6 +23,14 @@ class AppFixtures extends Fixture
         ->setUsername('Test')
         ->setPassword($this->passwordHasher->hashPassword($user, 'testtest'));
         
+        $admin = new User();
+        
+        $admin->setEmail('admin@test.fr')
+        ->setUsername('Admin')
+        ->setPassword($this->passwordHasher->hashPassword($user, 'testtest'))
+        ->setRoles(['ROLE_ADMIN']);
+
+        
         if ($env !== 'test') {
             $task = new Task();
             $task->setTitle("Test")
@@ -31,6 +39,7 @@ class AppFixtures extends Fixture
             $manager->persist($task);
         }
 
+        $manager->persist($admin);
         $manager->persist($user);
         $manager->flush();
     }
