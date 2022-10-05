@@ -18,7 +18,7 @@ class UserControllerTest extends AbstractWebTestCase
     {
         $this->client = static::createClient();
         $this->urlGenerator = $this->client->getContainer()->get('router');
-        $this->logUser($this->client, 'Test');
+        $this->logUser($this->client, 'Admin');
     }
 
     public function testUserListAction()
@@ -53,6 +53,7 @@ class UserControllerTest extends AbstractWebTestCase
             'user[password][first]' => 'testtest',
             'user[password][second]' => 'testtest',
             'user[email]' => 'phpunit@test.fr',
+            'user[roles]' => 'ROLE_USER',
         ]);
         
         $this->client->submit($form);
@@ -82,7 +83,7 @@ class UserControllerTest extends AbstractWebTestCase
         $form = $crawler->selectButton('Modifier')->form();
         
         $form->setValues([
-            'user[username]' => 'Test',
+            'user[username]' => 'Edited Test',
             'user[password][first]' => 'testtest',
             'user[password][second]' => 'testtest',
             'user[email]' => 'phpunit-edit@test.fr',
