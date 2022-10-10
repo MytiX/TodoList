@@ -1,5 +1,6 @@
 <?php
-namespace App\Tests\devryx\www\TodoList\tests;
+
+namespace App\Tests;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

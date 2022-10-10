@@ -2,11 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TaskRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TaskRepository;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[HasLifecycleCallbacks]
 class Task
 {
     #[ORM\Id]
@@ -33,7 +37,6 @@ class Task
 
     public function __construct()
     {
-        $this->createdAt = new \Datetime();
         $this->isDone = false;
     }
 
@@ -98,5 +101,11 @@ class Task
         $this->user = $user;
 
         return $this;
+    }
+
+    #[PrePersist]
+    public function prePersist()
+    {
+        $this->setCreatedAt(new DateTime());
     }
 }
