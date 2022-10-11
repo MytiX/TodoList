@@ -43,8 +43,8 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $task->setUser($this->getUser());
-            $this->entityManager->persist($task);
-            $this->entityManager->flush();
+
+            $this->taskRepository->save($task, true);
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
@@ -113,8 +113,7 @@ class TaskController extends AbstractController
 
         $this->denyAccessUnlessGranted('DELETE', $task);
 
-        $this->entityManager->remove($task);
-        $this->entityManager->flush();
+        $this->taskRepository->remove($task, true);
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 

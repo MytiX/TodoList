@@ -21,7 +21,7 @@ class UserController extends AbstractController
     }
 
     #[Route(path: '/users/create', name: 'user_create', methods: ['GET', 'POST'])]
-    public function createAction(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function createAction(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -32,8 +32,7 @@ class UserController extends AbstractController
             $password = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $userRepository->add($user, true);
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
