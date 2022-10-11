@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\devryx\www\TodoList\tests;
+namespace App\Tests;
 
 use Symfony\Component\Routing\Router;
 use Symfony\Component\DomCrawler\Form;
