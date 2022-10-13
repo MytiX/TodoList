@@ -19,11 +19,11 @@ class UserControllerTest extends AbstractWebTestCase
     {
         $this->client = static::createClient();
         $this->urlGenerator = $this->client->getContainer()->get('router');
-        $this->logUser($this->client, 'Admin');
     }
 
     public function testUserListAction()
     {
+        $this->logUser($this->client, 'Admin');
         $url = $this->urlGenerator->generate('user_list');
 
         $this->client->request(Request::METHOD_GET, $url);
@@ -34,39 +34,39 @@ class UserControllerTest extends AbstractWebTestCase
 
     public function testUserCreateAction()
     {
-        $url = $this->urlGenerator->generate('homepage');
+        $url = $this->urlGenerator->generate('login');
 
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('#main', "Créer un utilisateur");
+        $this->assertSelectorTextContains('#header', "Créer un compte");
         
-        $link = $crawler->selectLink('Créer un utilisateur')->link();
+        $link = $crawler->selectLink('Créer un compte')->link();
                 
         $crawler = $this->client->request(Request::METHOD_GET, $link->getUri());
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         
-        $form = $crawler->selectButton('Ajouter')->form();
+        $form = $crawler->selectButton('Continuer')->form();
         
         $form->setValues([
             'user[username]' => 'José',
             'user[password][first]' => 'testtest',
             'user[password][second]' => 'testtest',
-            'user[email]' => 'phpunit@test.fr',
-            'user[roles]' => 'ROLE_USER',
+            'user[email]' => 'phpunit@test.fr'
         ]);
         
         $this->client->submit($form);
         $this->client->followRedirect();
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('#main .alert-success', "Superbe ! L'utilisateur a bien été ajouté.");
+        $this->assertSelectorTextContains('#main .alert-success', "Superbe ! Votre compte à bien été crée.");
     }
 
     public function testUserEditAction()
     {
-        
+        $this->logUser($this->client, 'Admin');
+
         $url = $this->urlGenerator->generate('user_list');
         
         $crawler = $this->client->request(Request::METHOD_GET, $url);
@@ -79,15 +79,14 @@ class UserControllerTest extends AbstractWebTestCase
         $crawler = $this->client->request(Request::METHOD_GET, $link->getUri());
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('#main h1', "Modifier");
         
         $form = $crawler->selectButton('Modifier')->form();
         
         $form->setValues([
-            'user[username]' => 'Edited Test',
-            'user[password][first]' => 'testtest',
-            'user[password][second]' => 'testtest',
-            'user[email]' => 'phpunit-edit@test.fr',
+            'user_admin[username]' => 'Edited Test',
+            'user_admin[password][first]' => 'testtest',
+            'user_admin[password][second]' => 'testtest',
+            'user_admin[email]' => 'phpunit-edit@test.fr',
         ]);
         
         $this->client->submit($form);
