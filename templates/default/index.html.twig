@@ -1,14 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}
-    <h1>Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</h1>
-{% endblock %}
 
 {% block body %}
 
     <div class="row">
-        <a href="{{ path('task_create') }}" class="btn btn-success">Créer une nouvelle tâche</a>
-        <a href="{{ path('task_list') }}" class="btn btn-info">Consulter la liste des tâches à faire</a>
-        <a href="" class="btn btn-secondary">Consulter la liste des tâches terminées</a>
+        <div class="col-12">
+            <h1>Bienvenue sur Todo List !</h1>
+        </div>
     </div>
+
+    <div class="row">
+        <div class="col-12 text-end">
+            <a href="{{ path('task_create') }}" class="btn btn-info">Créer une nouvelle tâche</a>
+            <a href="{{ path('task_list_finish') }}" class="btn btn-secondary">Consulter la liste des tâches terminées</a>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        {% for task in tasks %}
+            <div class="col-3">
+                <div class="card-task">
+                    <div class="content">
+                        <h4><a href="{{ path('task_edit', {id: task.id}) }}">{{ task.title }}</a></h4>
+                        <p>{{ task.content }}</p>
+                    </div>
+                    <div class="row mx-0 action">
+                        <div class="col-6 g-0 text-center close">
+                            <form action="{{ path('task_toggle', {'id' : task.id }) }}">
+                                <button class="">
+                                    {% if task.isDone %}Rouvrir{% else %}Terminée{% endif %}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-6 g-0 text-center delete">
+                            <form action="{{ path('task_delete', {'id' : task.id }) }}">
+                                <button class="">Supprimer</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+                Vous n'avez pas de tâche en cours.
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}
