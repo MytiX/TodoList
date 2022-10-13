@@ -14,19 +14,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TaskController extends AbstractController
 {
-    public function __construct(private TaskRepository $taskRepository, private EntityManagerInterface $entityManager) {}
+    public function __construct(private TaskRepository $taskRepository, private EntityManagerInterface $entityManager)
+    {
+    }
 
-    #[Route(path: '/tasks', name: 'task_list')]
+    #[Route(path: '/tasks/finish', name: 'task_list_finish')]
     public function listAction(): Response
     {
         /** @var User $user */
         $user = $this->getUser();
 
         if ($this->isGranted('ROLE_ADMIN', $user)) {
-            $tasks = $this->taskRepository->findAllAnonymousAndTheseTask($user->getId());
+            $tasks = $this->taskRepository->findAllAnonymousAndTheseTask($user->getId(), 1);
         } else {
             $tasks = $this->taskRepository->findBy([
-                'user' => $user->getId()
+                'user' => $user->getId(),
+                'isDone' => 1
             ]);
         }
 
@@ -48,7 +51,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -60,7 +63,7 @@ class TaskController extends AbstractController
         $task = $this->taskRepository->find($id);
 
         if (null === $task) {
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('homepage');
         }
 
         $this->denyAccessUnlessGranted('EDIT', $task);
@@ -74,7 +77,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('task/edit.html.twig', [
@@ -89,7 +92,7 @@ class TaskController extends AbstractController
         $task = $this->taskRepository->find($id);
 
         if (null === $task) {
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('homepage');
         }
 
         $this->denyAccessUnlessGranted('TOGGLE', $task);
@@ -99,7 +102,7 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('homepage');
     }
 
     #[Route(path: '/tasks/{id}/delete', name: 'task_delete')]
@@ -108,7 +111,7 @@ class TaskController extends AbstractController
         $task = $this->taskRepository->find($id);
 
         if (null === $task) {
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('homepage');
         }
 
         $this->denyAccessUnlessGranted('DELETE', $task);
@@ -117,6 +120,6 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('homepage');
     }
 }
