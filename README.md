@@ -48,11 +48,11 @@ http://localhost:8761/index.php
 ## User Access
 Admin :
 ```
-username : admin@test.fr
+username : Admin
 password : testtest
 ```
 User :
 ```
-username : test@test.fr
+username : Test
 password : testtest
 ```
