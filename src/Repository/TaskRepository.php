@@ -39,11 +39,12 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllAnonymousAndTheseTask(int $id): array
+    public function findAllAnonymousAndTheseTask(int $id, int $isDone = 0): array
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.user = :id OR t.user IS NULL')
+            ->andWhere('(t.user = :id OR t.user IS NULL) AND t.isDone = :isDone')
             ->setParameter('id', $id)
+            ->setParameter('isDone', $isDone)
             ->getQuery()
             ->getResult()
         ;

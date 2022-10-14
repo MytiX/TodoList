@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserAdminType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,10 @@ class UserController extends AbstractController
     #[Route(path: '/users/create', name: 'user_create', methods: ['GET', 'POST'])]
     public function createAction(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
+        if ($this->getUser() != null) {
+            return $this->redirectToRoute('homepage');
+        }
+        
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -34,9 +39,9 @@ class UserController extends AbstractController
 
             $userRepository->add($user, true);
 
-            $this->addFlash('success', "L'utilisateur a bien été ajouté.");
+            $this->addFlash('success', "Votre compte à bien été crée.");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('login');
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
@@ -51,7 +56,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_list');
         }
 
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserAdminType::class, $user);
 
         $form->handleRequest($request);
 

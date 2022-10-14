@@ -5,15 +5,28 @@
         <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    <form action="{{ path('login_check') }}" method="post">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    <div class="row h-100 d-flex">
+        <div class="col-6 overflow-hidden position-relative">
+            <img src="{{ asset("assets/img/login.jpg") }}" class="login-img" alt="">
+        </div>
+        <div class="col-6 align-self-center">
+            <form action="{{ path('login_check') }}" method="post" class="d-flex flex-column">
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nom d'utilisateur :</label>
+                    <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}" />
+                </div>
 
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate_login') }}">
+                <div class="mb-3">
+                    <label for="password">Mot de passe :</label>
+                    <input class="form-control" type="password" id="password" name="_password" />
+                </div>
 
-        <button class="btn btn-success" type="submit">Se connecter</button>
-    </form>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate_login') }}">
+
+                <button class="btn btn-openclassroom ms-auto" type="submit">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
 {% endblock %}

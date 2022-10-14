@@ -27,12 +27,12 @@ class TaskControllerTest extends AbstractWebTestCase
     {
         $this->logUser($this->client, 'Test');
 
-        $url = $this->urlGenerator->generate('task_list');
+        $url = $this->urlGenerator->generate('homepage');
 
         $this->client->request(Request::METHOD_GET, $url);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('#main .alert-warning', "Il n'y a pas encore de tâche enregistrée.");
+        $this->assertSelectorTextContains('#main .alert-warning', "Vous n'avez pas de tâche en cours.");
     }
 
     public function testTaskCreateAction()
@@ -42,8 +42,8 @@ class TaskControllerTest extends AbstractWebTestCase
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('#main form', "Title");
-        $this->assertSelectorTextContains('#main form', "Content");
+        $this->assertSelectorTextContains('#main form', "Titre");
+        $this->assertSelectorTextContains('#main form', "Contenu");
 
         /** @var Form $form */
         $form = $crawler->selectButton('Ajouter')->form();
@@ -64,7 +64,7 @@ class TaskControllerTest extends AbstractWebTestCase
 
     public function testTaskEditAction()
     {
-        $url = $this->urlGenerator->generate('task_list');
+        $url = $this->urlGenerator->generate('homepage');
 
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
@@ -79,8 +79,8 @@ class TaskControllerTest extends AbstractWebTestCase
         $crawler->addHtmlContent($response->getContent());
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSelectorTextContains('#main form', "Title");
-        $this->assertSelectorTextContains('#main form', "Content");
+        $this->assertSelectorTextContains('#main form', "Titre");
+        $this->assertSelectorTextContains('#main form', "Contenu");
         $this->assertSelectorTextContains('#main form', "Modifier");
 
         $form = $crawler->selectButton('Modifier')->form();
@@ -102,11 +102,11 @@ class TaskControllerTest extends AbstractWebTestCase
 
     public function testTaskToggleTaskAction()
     {
-        $url = $this->urlGenerator->generate('task_list');
+        $url = $this->urlGenerator->generate('homepage');
 
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
-        $form = $crawler->selectButton('Marquer comme faite')->form();
+        $form = $crawler->selectButton('Terminée')->form();
 
         $this->client->submit($form);
         $this->client->followRedirect();
@@ -114,12 +114,12 @@ class TaskControllerTest extends AbstractWebTestCase
         $response = $this->client->getResponse();
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSelectorTextContains('#main form button', "Marquer non terminée");
+        $this->assertSelectorTextContains('#main .alert-success', "Superbe !");
     }
 
     public function testTaskDeleteTaskAction()
     {
-        $url = $this->urlGenerator->generate('task_list');
+        $url = $this->urlGenerator->generate('task_list_finish');
 
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 

@@ -1,14 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}<h1>Créer un utilisateur</h1>{% endblock %}
+{% block header_title %}<h1>Créer un compte</h1>{% endblock %}
 {% block header_img %}{% endblock %}
 
 {% block body %}
-    <div class="row">
-        {{ form_start(form, {'action' : path('user_create')}) }}
-            {{ form_widget(form) }}
-
-            <button type="submit" class="btn btn-success pull-right">Ajouter</button>
-        {{ form_end(form) }}
+    <div class="row h-100 d-flex">
+        <div class="col-6 overflow-hidden position-relative">
+            <img src="{{ asset("assets/img/login.jpg") }}" class="login-img" alt="">
+        </div>
+        <div class="col-6 align-self-center">
+            {{ form_start(form, {'action' : path('user_create')}) }}
+                <div class="d-flex flex-column">
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-openclassroom ms-auto">Continuer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}

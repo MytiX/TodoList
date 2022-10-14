@@ -5,9 +5,9 @@ PHP = php
 # Command
 phpunit: create-test-env
 	$(PHP) bin/phpunit
+	$(SYMFONY_CONSOLE) d:d:d --env=test --force --if-exists
 
 create-test-env:
-	$(SYMFONY_CONSOLE) d:d:d --env=test --force --if-exists
 	$(SYMFONY_CONSOLE) d:d:c --env=test --if-not-exists
 	$(SYMFONY_CONSOLE) d:s:u --env=test --force
 	$(SYMFONY_CONSOLE) d:f:l --env=test --no-interaction
