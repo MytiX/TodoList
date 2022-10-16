@@ -15,8 +15,6 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {        
-        $env = $this->parameterBag->get('app.env');
-
         $user = new User();
         
         $user->setEmail('test@test.fr')

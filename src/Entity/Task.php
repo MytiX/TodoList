@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\TaskRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\TaskRepository;
-use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\ORM\Mapping\PrePersist;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -22,11 +22,11 @@ class Task
     private $createdAt;
 
     #[ORM\Column(type: 'string')]
-    #[Assert\NotBlank(message: "Vous devez saisir un titre.")]
+    #[Assert\NotBlank(message: 'Vous devez saisir un titre.')]
     private $title;
 
     #[ORM\Column(type: 'text')]
-    #[Assert\NotBlank(message: "Vous devez saisir du contenu.")]
+    #[Assert\NotBlank(message: 'Vous devez saisir du contenu.')]
     private $content;
 
     #[ORM\Column(type: 'boolean')]

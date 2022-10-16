@@ -3,15 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserType;
 use App\Form\UserAdminType;
+use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
@@ -24,10 +24,10 @@ class UserController extends AbstractController
     #[Route(path: '/users/create', name: 'user_create', methods: ['GET', 'POST'])]
     public function createAction(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
-        if ($this->getUser() != null) {
+        if (null != $this->getUser()) {
             return $this->redirectToRoute('homepage');
         }
-        
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -39,7 +39,7 @@ class UserController extends AbstractController
 
             $userRepository->add($user, true);
 
-            $this->addFlash('success', "Votre compte à bien été crée.");
+            $this->addFlash('success', 'Votre compte à bien été crée.');
 
             return $this->redirectToRoute('login');
         }

@@ -4,10 +4,10 @@ namespace App\Security\Voter;
 
 use App\Entity\Task;
 use App\Entity\User;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TaskVoter extends Voter
 {
@@ -15,7 +15,9 @@ class TaskVoter extends Voter
     public const EDIT = 'EDIT';
     public const TOGGLE = 'TOGGLE';
 
-    public function __construct(private Security $security) {}
+    public function __construct(private Security $security)
+    {
+    }
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -27,16 +29,17 @@ class TaskVoter extends Voter
     {
         /** @var User $user */
         $user = $token->getUser();
-        
+
         if (!$user instanceof UserInterface) {
             return false;
         }
-        
+
         switch ($attribute) {
             case self::DELETE:
-                if ($this->security->isGranted('ROLE_ADMIN', $user) && $subject->getUser() === null) {
+                if ($this->security->isGranted('ROLE_ADMIN', $user) && null === $subject->getUser()) {
                     return true;
                 }
+
                 return $this->isValid($subject, $user);
             case self::EDIT:
                 return $this->isValid($subject, $user);
@@ -52,7 +55,7 @@ class TaskVoter extends Voter
         if ($subject->getUser()->getId() === $user->getId()) {
             return true;
         }
-        
+
         return false;
     }
 }

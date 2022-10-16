@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Repository\TaskRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
@@ -20,7 +20,7 @@ class DefaultController extends AbstractController
         } else {
             $tasks = $taskRepository->findBy([
                 'user' => $user->getId(),
-                'isDone' => 0
+                'isDone' => 0,
             ]);
         }
 
