@@ -99,7 +99,7 @@ class TaskControllerTest extends AbstractWebTestCase
         $this->assertSelectorTextContains('#main .alert-success', "Superbe ! La tâche a bien été modifiée.");
 
     }
-
+    
     public function testTaskToggleTaskAction()
     {
         $url = $this->urlGenerator->generate('homepage');

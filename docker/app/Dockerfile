@@ -42,4 +42,6 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 
 EXPOSE 80
 
+ENV CODACY_PROJECT_TOKEN=c986cc7e72874c1d9024ffa49edb3591
+
 CMD ["apache2-foreground"]

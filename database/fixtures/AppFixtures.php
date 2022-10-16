@@ -30,14 +30,12 @@ class AppFixtures extends Fixture
         ->setPassword($this->passwordHasher->hashPassword($user, 'testtest'))
         ->setRoles(['ROLE_ADMIN']);
 
+        // Anonymous task
+        $task = new Task();
+        $task->setTitle("Test")
+            ->setContent("test");
+        $manager->persist($task);
         
-        if ($env !== 'test') {
-            $task = new Task();
-            $task->setTitle("Test")
-                ->setContent("test")
-                ->setUser($user);
-            $manager->persist($task);
-        }
 
         $manager->persist($admin);
         $manager->persist($user);

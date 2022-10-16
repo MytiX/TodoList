@@ -30,6 +30,13 @@ class UserControllerTest extends AbstractWebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('#main .btn-success', "Edit");
+
+        $this->logUser($this->client, 'Test');
+        $url = $this->urlGenerator->generate('user_list');
+
+        $this->client->request(Request::METHOD_GET, $url);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCreateAction()
