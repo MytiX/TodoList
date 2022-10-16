@@ -8,6 +8,7 @@
 /vendor/
 /.symfony5/
 .bash_history
+.cache
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
