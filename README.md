@@ -1,4 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/952424dbc1164936ac4434dba39051d5)](https://www.codacy.com/gh/MytiX/TodoList/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MytiX/TodoList&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/952424dbc1164936ac4434dba39051d5)](https://www.codacy.com/gh/MytiX/TodoList/dashboard?utm_source=github.com&utm_medium=referral&utm_content=MytiX/TodoList&utm_campaign=Badge_Coverage)
 
 # About ToDoList
 
